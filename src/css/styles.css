@@ -132,3 +132,15 @@ button:hover {
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
 }
+
+.loading-text {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  margin: 20px 0;
+  color: #2e2f42;
+}
+
+.hidden {
+  display: none !important;
+}
