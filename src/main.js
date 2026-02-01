@@ -1,7 +1,7 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import { getImagesByQuery } from './js/pixabay-api.js';
-import { createGallery, clearGallery, showLoadMoreButton, hideLoadMoreButton } from './js/render-functions.js';
+import { createGallery, clearGallery, showLoadMoreButton, hideLoadMoreButton, showLoader, hideLoader } from './js/render-functions.js';
 
 let query = '';
 let page = 1;
@@ -9,7 +9,6 @@ let totalPages = 0;
 
 const form = document.querySelector('.form');
 const loadMoreBtn = document.querySelector('.load-more');
-const loadingText = document.querySelector('.loading-text'); // Наш текст
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -21,8 +20,7 @@ form.addEventListener('submit', async (event) => {
   clearGallery();
   hideLoadMoreButton();
   
-
-  loadingText.classList.remove('hidden');
+  showLoader(); 
 
   try {
     const data = await getImagesByQuery(query, page);
@@ -33,21 +31,19 @@ form.addEventListener('submit', async (event) => {
     } else {
       createGallery(data.hits);
       if (totalPages > 1) showLoadMoreButton();
-      else iziToast.info({ message: "End of results", position: 'topRight' });
+      else iziToast.info({ message: "We're sorry, but you've reached the end of search results", position: 'topRight' });
     }
   } catch (error) {
     console.log(error);
   } finally {
-
-    loadingText.classList.add('hidden');
+    hideLoader();
   }
 });
 
 loadMoreBtn.addEventListener('click', async () => {
   page += 1;
   hideLoadMoreButton();
-  
-  loadingText.classList.remove('hidden');
+  showLoader(); 
 
   try {
     const data = await getImagesByQuery(query, page);
@@ -64,6 +60,6 @@ loadMoreBtn.addEventListener('click', async () => {
       window.scrollBy({ top: card.getBoundingClientRect().height * 2, behavior: 'smooth' });
     }
   } finally {
-    loadingText.classList.add('hidden');
+    hideLoader(); 
   }
 });
